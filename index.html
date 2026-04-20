@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>PropertyAtlas — Commercial Property Intelligence for Singapore</title>
+<meta name="description" content="PropertyAtlas is a commercial property intelligence platform for Singapore — REIT-analyst-grade data and editorial, built for tenants, landlords, and the brokers who advise them."/>
+<meta name="theme-color" content="#1A4F9C"/>
+
+<!-- Open Graph (for LinkedIn / WhatsApp previews) -->
+<meta property="og:title" content="PropertyAtlas — Commercial Property Intelligence for Singapore"/>
+<meta property="og:description" content="REIT-analyst-grade data and editorial, built for tenants, landlords, and the brokers who advise them."/>
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://propertyatlas.sg"/>
+
+<style>
+  /* ───────── Tokens ───────── */
+  :root {
+    --navy:       #1A4F9C;
+    --navy-deep:  #0F3775;
+    --navy-ink:   #0B2B5C;
+    --bronze:     #A67C3A;
+    --bronze-lt:  #C9A264;
+    --cream:      #F7F3EB;
+    --cream-lt:   #FAF7F0;
+    --ink:        #1A1A1A;
+    --muted:      #6B6157;
+
+    --body-serif:    Georgia, "Times New Roman", serif;
+    --display-serif: Georgia, "Times New Roman", serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: var(--body-serif);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ───────── Atmospheric background ───────── */
+  /* Very slow, almost imperceptible gradient shift. Creates depth without
+     visible motion — signals "alive" rather than static template. */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(circle at 20% 10%, rgba(26,79,156,0.04) 0%, transparent 50%),
+      radial-gradient(circle at 85% 90%, rgba(166,124,58,0.05) 0%, transparent 50%);
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* Subtle paper-grain texture overlay — adds editorial warmth */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    z-index: 1;
+    pointer-events: none;
+    mix-blend-mode: multiply;
+  }
+
+  /* ───────── Layout ───────── */
+  .page {
+    position: relative;
+    z-index: 2;
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    padding: clamp(28px, 5vw, 64px) clamp(24px, 6vw, 96px);
+  }
+
+  /* ───────── Masthead ───────── */
+  .masthead {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding-bottom: clamp(16px, 3vw, 28px);
+    border-bottom: 1px solid rgba(26, 79, 156, 0.15);
+    opacity: 0;
+    animation: fadeInDown 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+  }
+
+  .wordmark {
+    font-family: var(--display-serif);
+    font-size: clamp(22px, 3vw, 30px);
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: -0.01em;
+    line-height: 1;
+    display: inline-flex;
+    align-items: baseline;
+  }
+
+  .wordmark .dot {
+    color: var(--bronze);
+    font-weight: 400;
+    margin: 0 0.05em;
+  }
+
+  .wordmark .tld {
+    color: var(--bronze);
+    font-weight: 400;
+    font-style: italic;
+    font-size: 0.75em;
+    letter-spacing: 0.02em;
+  }
+
+  .established {
+    font-size: clamp(10px, 1.2vw, 12px);
+    color: var(--muted);
+    font-style: italic;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .established strong {
+    font-style: normal;
+    font-weight: 400;
+    color: var(--navy);
+  }
+
+  @media (max-width: 560px) {
+    .established { display: none; }
+  }
+
+  /* ───────── Main content ───────── */
+  .main {
+    display: grid;
+    place-items: center;
+    padding: clamp(40px, 8vw, 80px) 0;
+  }
+
+  .stage {
+    max-width: 880px;
+    width: 100%;
+  }
+
+  /* Eyebrow label */
+  .eyebrow {
+    font-size: clamp(11px, 1.2vw, 13px);
+    font-weight: 700;
+    color: var(--bronze);
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    margin-bottom: clamp(24px, 4vw, 32px);
+    opacity: 0;
+    animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
+  }
+
+  .eyebrow::before {
+    content: "";
+    display: inline-block;
+    width: 32px;
+    height: 1px;
+    background: var(--bronze);
+    vertical-align: middle;
+    margin-right: 14px;
+    transform: translateY(-2px);
+  }
+
+  /* Headline */
+  .headline {
+    font-family: var(--display-serif);
+    font-size: clamp(36px, 7vw, 82px);
+    font-weight: 700;
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    color: var(--navy-ink);
+    margin-bottom: clamp(28px, 4vw, 40px);
+    opacity: 0;
+    animation: fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.7s forwards;
+  }
+
+  .headline .accent {
+    color: var(--bronze);
+    font-style: italic;
+    font-weight: 400;
+  }
+
+  /* Bronze rule between headline and positioning */
+  .rule {
+    width: 72px;
+    height: 2px;
+    background: var(--bronze);
+    margin-bottom: clamp(24px, 4vw, 32px);
+    opacity: 0;
+    animation: expandRule 0.9s cubic-bezier(0.16, 1, 0.3, 1) 1s forwards;
+    transform-origin: left;
+  }
+
+  /* Positioning paragraph */
+  .positioning {
+    font-family: var(--body-serif);
+    font-size: clamp(17px, 2vw, 22px);
+    line-height: 1.55;
+    color: var(--ink);
+    max-width: 680px;
+    opacity: 0;
+    animation: fadeInUp 1.1s cubic-bezier(0.16, 1, 0.3, 1) 1.2s forwards;
+  }
+
+  .positioning em {
+    color: var(--bronze);
+    font-style: italic;
+    font-weight: 400;
+  }
+
+  /* Status line */
+  .status {
+    margin-top: clamp(40px, 6vw, 56px);
+    font-size: clamp(13px, 1.4vw, 15px);
+    color: var(--muted);
+    font-style: italic;
+    line-height: 1.5;
+    opacity: 0;
+    animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) 1.5s forwards;
+  }
+
+  .status strong {
+    font-style: normal;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: 0.02em;
+  }
+
+  /* ───────── Footer ───────── */
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: clamp(20px, 3vw, 28px);
+    border-top: 1px solid rgba(26, 79, 156, 0.15);
+    font-size: clamp(11px, 1.1vw, 12px);
+    color: var(--muted);
+    letter-spacing: 0.04em;
+    opacity: 0;
+    animation: fadeIn 1s ease 1.8s forwards;
+  }
+
+  .footer .left { font-style: italic; }
+  .footer .right {
+    font-family: var(--body-serif);
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 560px) {
+    .footer { flex-direction: column; gap: 8px; text-align: center; }
+  }
+
+  /* ───────── Animations ───────── */
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes expandRule {
+    from { opacity: 0; transform: scaleX(0); }
+    to   { opacity: 1; transform: scaleX(1); }
+  }
+
+  /* Respect reduced-motion preferences */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-delay: 0ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  /* Print styles — for anyone who prints the page for some reason */
+  @media print {
+    body::before, body::after { display: none; }
+    .page { padding: 40px; }
+  }
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+  <!-- Masthead -->
+  <header class="masthead">
+    <div class="wordmark">
+      PropertyAtlas<span class="dot">·</span><span class="tld">sg</span>
+    </div>
+    <div class="established">
+      Established <strong>2026</strong> &nbsp;·&nbsp; Singapore
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="main">
+    <div class="stage">
+      <div class="eyebrow">Coming Soon</div>
+
+      <h1 class="headline">
+        Commercial property intelligence,<br>
+        <span class="accent">properly researched.</span>
+      </h1>
+
+      <div class="rule"></div>
+
+      <p class="positioning">
+        PropertyAtlas is a Singapore commercial-property intelligence platform —
+        REIT-analyst-grade data and editorial, built for tenants, landlords, and
+        the brokers who advise them. A newsroom, a dataset, and a set of tools,
+        published under one voice.
+      </p>
+
+      <p class="status">
+        <strong>Launching 2026.</strong> &nbsp; Subscribe to the newsroom at launch.
+      </p>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="left">A TK Real Estate publication.</div>
+    <div class="right">propertyatlas.sg</div>
+  </footer>
+
+</div>
+
+</body>
+</html>
